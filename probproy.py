@@ -47,8 +47,26 @@ navbar = dbc.Nav(className="nav nav-pills", children=[
 
 # Input
 inputs = dbc.FormGroup([
-    html.H4("Selecciones Tipo de Problema"),
-    dcc.Dropdown(id="country", options=[{"label":x,"value":x} for x in problemas], value="Personal")
+    html.H4("Seleccione tipo de problema"),
+    dcc.RadioItems(id="tipo_problema", options=[{"label":x,"value":x} for x in problemas], value="Personal",
+                   labelStyle={
+                    'display': 'block',
+                    'margin-right': '7px',
+                    'font-weight': 500
+                }),
+    html.Br(),
+    html.H4(u"Problema específico"),
+
+    dcc.RadioItems(id='problema_especifico',
+                   labelStyle={
+                    'display': 'block',
+                    'margin-right': '7px',
+                    'font-weight': 500
+                }
+                
+                   )
+
+
 ])
 # App Layout
 app.layout = dbc.Container(fluid=True, children=[
@@ -66,7 +84,7 @@ app.layout = dbc.Container(fluid=True, children=[
         ]),
         ### plots
         dbc.Col(md=9, children=[
-            dbc.Col(html.H4("Forecast 30 days from today"), width={"size":6,"offset":3}), 
+            dbc.Col(html.H4("Dilemas, Problemas o Conclictos?"), width={"size":6,"offset":3}), 
             dbc.Tabs(className="nav nav-pills", children=[
                 dbc.Tab(dcc.Graph(id="plot-total"), label="Total cases"),
                 dbc.Tab(dcc.Graph(id="plot-active"), label="Active cases")
@@ -74,30 +92,15 @@ app.layout = dbc.Container(fluid=True, children=[
         ])
     ])
 ])
-'''
+#####CALLBACKS
+
 @app.callback(
-    Output('tipo-radio', 'options'), #options property is updated here 
-    Input('lista_problemas', 'value'))
-def definir_tipo_problemas(problema_seleccionado):
+    Output('problema_especifico', 'options'), #options property is updated here 
+    Input('tipo_problema', 'value'))
+def set_cities_options(problema_seleccionado):
     return [{'label': i, 'value': i} for i in problemas[problema_seleccionado]]
 
 
-@app.callback(
-    Output('tipo-radio', 'value'),
-    Input('tipo-radio', 'options'))
-def definir_problema_especifico(opciones_disponibles):
-    return opciones_disponibles[0]['value'] #selected value in the RadioItems
-
-
-@app.callback(
-    Output('display-selected-values', 'children'),
-    Input('lista_problemas', 'value'),
-    Input('tipo-radio', 'value'))
-def set_display_children(problema_seleccionado, tipo_seleccionado):
-    return u'{} is a city in {}'.format(
-        problema_seleccionado, tipo_seleccionado,
-    )
-'''
 
 if __name__ == '__main__':
     app.run_server(debug=True)
