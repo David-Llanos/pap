@@ -57,7 +57,7 @@ inputs = dbc.FormGroup([
     html.Br(),
     html.H4(u"Problema específico"),
 
-    dcc.RadioItems(id='problema_especifico',
+    dcc.RadioItems(id='problema_especifico', value="____",
                    labelStyle={
                     'display': 'block',
                     'margin-right': '7px',
@@ -86,20 +86,31 @@ app.layout = dbc.Container(fluid=True, children=[
         dbc.Col(md=9, children=[
             dbc.Col(html.H4("Dilemas, Problemas o Conclictos?"), width={"size":6,"offset":3}), 
             dbc.Tabs(className="nav nav-pills", children=[
-                dbc.Tab(dcc.Graph(id="plot-total"), label="Total cases"),
-                dbc.Tab(dcc.Graph(id="plot-active"), label="Active cases")
+                dbc.Tab(html.Div(id='descripcion_problema'), label= u"Descripción del problema"),
+                dbc.Tab(dcc.Graph(id="plot-active"), label="Proyecto Final")
             ])
         ])
     ])
 ])
 #####CALLBACKS
 
+
+### ACTUALIZAR OPCIONES PARA CADA TIPO DE PROBLEMA
 @app.callback(
     Output('problema_especifico', 'options'), #options property is updated here 
     Input('tipo_problema', 'value'))
 def set_cities_options(problema_seleccionado):
     return [{'label': i, 'value': i} for i in problemas[problema_seleccionado]]
 
+### DESCRIPCION DEL PROBLEMA
+@app.callback(
+    Output('descripcion_problema', 'children'),
+    Input('tipo_problema', 'value'),
+    Input('problema_especifico', 'value'))
+def set_display_children(ps, pe):
+    return u'Usted a señalado que tiene un problema {} relacionado con  {}'.format(
+        ps, pe,
+    )
 
 
 if __name__ == '__main__':
