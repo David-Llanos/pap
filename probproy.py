@@ -17,9 +17,9 @@ external_stylesheets = [dbc.themes.CERULEAN]
 app = dash.Dash(external_stylesheets=[dbc.themes.CERULEAN])
 
 problemas = {
-    'Personal': [u'Relación amorosa', 'Depresión', 'Desempleo'],
-    'Familiar': [u'Relación con los Hijos', 'Relación con suegros', 'Otros miembros de la familia'], #note unicode for Montréal
-    'Laboral': [u'Desmotivación', 'Demasiada presión', 'Falta de oportunidades de crecimiento'] 
+    'Personal': [u'Una relación amorosa', 'Depresión', 'Desempleo'],
+    'Familiar': [u'Los hijos', 'Los suegros', 'Otros miembros de la familia'],
+    'Laboral': [u'Desmotivación', 'Demasiada presión', 'Falta de oportunidades de crecimiento']
 }
 
 # App Instance
@@ -40,7 +40,7 @@ navbar = dbc.Nav(className="nav nav-pills", children=[
     ])),
     ## links
     dbc.DropdownMenu(label="Links", nav=True, children=[
-        dbc.DropdownMenuItem([html.I(className="fa fa-linkedin"), "  Contacts"], href=config.contacts, target="_blank"), 
+        dbc.DropdownMenuItem([html.I(className="fa fa-linkedin"), "  Contacts"], href=config.contacts, target="_blank"),
         dbc.DropdownMenuItem([html.I(className="fa fa-github"), "  Code"], href=config.code, target="_blank")
     ])
 ])
@@ -63,10 +63,8 @@ inputs = dbc.FormGroup([
                     'margin-right': '7px',
                     'font-weight': 500
                 }
-                
+
                    )
-
-
 ])
 # App Layout
 app.layout = dbc.Container(fluid=True, children=[
@@ -78,16 +76,26 @@ app.layout = dbc.Container(fluid=True, children=[
     dbc.Row([
         ### input + panel
         dbc.Col(md=3, children=[
-            inputs, 
+            inputs,
             html.Br(),html.Br(),html.Br(),
             html.Div(id="output-panel")
         ]),
         ### plots
         dbc.Col(md=9, children=[
-            dbc.Col(html.H4("Dilemas, Problemas o Conclictos?"), width={"size":6,"offset":3}), 
+            dbc.Col(html.H4("Dilemas, Problemas o Conclictos?"), width={"size":6,"offset":3}),
+
             dbc.Tabs(className="nav nav-pills", children=[
-                dbc.Tab(html.Div(id='descripcion_problema'), label= u"Descripción del problema"),
-                dbc.Tab(dcc.Graph(id="plot-active"), label="Proyecto Final")
+                dbc.Tab(html.Div(id='descripcion_problema'),
+
+                                label= u"Descripción del problema",
+                                style= {
+                                    'display': 'block',
+                                    'margin-right': '7px',
+                                    'margin-top': '40px',
+                                    'font-size': '2rem'
+                                } ),
+
+                dbc.Tab(dcc.Graph(id="plot-active"), label="Proyecto final")
             ])
         ])
     ])
@@ -97,9 +105,9 @@ app.layout = dbc.Container(fluid=True, children=[
 
 ### ACTUALIZAR OPCIONES PARA CADA TIPO DE PROBLEMA
 @app.callback(
-    Output('problema_especifico', 'options'), #options property is updated here 
+    Output('problema_especifico', 'options'), #options property is updated here
     Input('tipo_problema', 'value'))
-def set_cities_options(problema_seleccionado):
+def def_problema_seleccionado(problema_seleccionado):
     return [{'label': i, 'value': i} for i in problemas[problema_seleccionado]]
 
 ### DESCRIPCION DEL PROBLEMA
@@ -107,9 +115,9 @@ def set_cities_options(problema_seleccionado):
     Output('descripcion_problema', 'children'),
     Input('tipo_problema', 'value'),
     Input('problema_especifico', 'value'))
-def set_display_children(ps, pe):
-    return u'Usted a señalado que tiene un problema {} relacionado con  {}'.format(
-        ps, pe,
+def def_descripcion_problema(ps, pe):
+    return u'Usted ha señalado que tiene un problema {} relacionado con  {}'.format(
+        ps.lower(), pe.lower(),
     )
 
 
