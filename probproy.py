@@ -48,7 +48,7 @@ navbar = dbc.Nav(className="nav nav-pills", children=[
 # Input
 inputs = dbc.FormGroup([
 
-    html.H5("Seleccione tipo de problema"),
+    html.H5("1. Seleccione tipo de problema"),
     dcc.RadioItems(id="tipo_problema", options=[{"label":x,"value":x} for x in problemas], value="",
                    labelStyle={
                     'display': 'block',
@@ -58,7 +58,7 @@ inputs = dbc.FormGroup([
 
 
     html.Br(),
-    html.H5(u"Problema específico", id= 'titulo_problema_especifico', style={'display':'none'}),
+    html.H5(u"2. Problema específico", id= 'titulo_problema_especifico', style={'display':'none'}),
     dcc.RadioItems(id='problema_especifico', value="",
                    style= {
                        'display':'block'
@@ -71,7 +71,7 @@ inputs = dbc.FormGroup([
 
                    ),
     html.Br(),
-    html.H5(u"Está usted en una encrucijada donde tiene que tomar decisiones excluyentes?", id= 'titulo_decision_excluyente', style={'display':'none'}),
+    html.H5(u"3. Está usted en una encrucijada donde tiene que tomar decisiones excluyentes?", id= 'titulo_decision_excluyente', style={'display':'none'}),
     dcc.RadioItems(id='decision_excluyente',
                     options=[
                                 {'label': u'Sí', 'value': 'si'},
@@ -90,7 +90,7 @@ inputs = dbc.FormGroup([
                    ),
 
     html.Br(),
-    html.H5(u"Es esta una decisión que afecta sus principios y valores?", id= 'titulo_decision_afecta_valores', style={'display':'none'}),
+    html.H5(u"4a. Es esta una decisión que afecta sus principios y valores?", id= 'titulo_decision_afecta_valores', style={'display':'none'}),
     dcc.RadioItems(id='decision_afecta_valores',
                     options=[
                                 {'label': u'Sí', 'value': 'si'},
@@ -109,7 +109,7 @@ inputs = dbc.FormGroup([
                    ),
 
       html.Br(),
-    html.H5(u"Es difícil identificar sus objetivos y cómo alcanzarlos?", id= 'titulo_objetivo_dificil', style={'display':'none'}),
+    html.H5(u"4b. Es difícil identificar sus objetivos y cómo alcanzarlos?", id= 'titulo_objetivo_dificil', style={'display':'none'}),
     dcc.RadioItems(id='objetivo_dificil',
                     options=[
                                 {'label': u'Sí', 'value': 'si'},
