@@ -47,17 +47,19 @@ navbar = dbc.Nav(className="nav nav-pills", children=[
 
 # Input
 inputs = dbc.FormGroup([
-    html.H4("Seleccione tipo de problema"),
+
+    html.H5("Seleccione tipo de problema"),
     dcc.RadioItems(id="tipo_problema", options=[{"label":x,"value":x} for x in problemas], value="",
                    labelStyle={
                     'display': 'block',
                     'margin-right': '7px',
                     'font-weight': 500
                 }),
-    html.Br(),
-    html.H4(u"Problema específico", id= 'titulo_problema_especifico', style={'display':'none'}),
 
-    dcc.RadioItems(id='problema_especifico', value="____",
+
+    html.Br(),
+    html.H5(u"Problema específico", id= 'titulo_problema_especifico', style={'display':'none'}),
+    dcc.RadioItems(id='problema_especifico', value="",
                    style= {
                        'display':'block'
                    },
@@ -67,7 +69,64 @@ inputs = dbc.FormGroup([
                     'font-weight': 500
                 }
 
-                   )
+                   ),
+    html.Br(),
+    html.H5(u"Está usted en una encrucijada donde tiene que tomar decisiones excluyentes?", id= 'titulo_decision_excluyente', style={'display':'none'}),
+    dcc.RadioItems(id='decision_excluyente',
+                    options=[
+                                {'label': u'Sí', 'value': 'si'},
+                                {'label': 'No', 'value': 'no'}
+                            ] ,
+                    value="",
+                   style= {
+                       'display':'block'
+                   },
+                   labelStyle={
+                    'display': 'block',
+                    'margin-right': '7px',
+                    'font-weight': 500
+                }
+
+                   ),
+
+    html.Br(),
+    html.H5(u"Es esta una decisión que afecta sus principios y valores?", id= 'titulo_decision_afecta_valores', style={'display':'none'}),
+    dcc.RadioItems(id='decision_afecta_valores',
+                    options=[
+                                {'label': u'Sí', 'value': 'si'},
+                                {'label': 'No', 'value': 'no'}
+                            ] ,
+                    value="",
+                   style= {
+                       'display':'block'
+                   },
+                   labelStyle={
+                    'display': 'block',
+                    'margin-right': '7px',
+                    'font-weight': 500
+                }
+
+                   ),
+
+      html.Br(),
+    html.H5(u"Es difícil identificar sus objetivos y cómo alcanzarlos?", id= 'titulo_objetivo_dificil', style={'display':'none'}),
+    dcc.RadioItems(id='objetivo_dificil',
+                    options=[
+                                {'label': u'Sí', 'value': 'si'},
+                                {'label': 'No', 'value': 'no'}
+                            ] ,
+                    value="",
+                   style= {
+                       'display':'block'
+                   },
+                   labelStyle={
+                    'display': 'block',
+                    'margin-right': '7px',
+                    'font-weight': 500
+                }
+
+                   ),
+
 ])
 # App Layout
 app.layout = dbc.Container(fluid=True, children=[
@@ -88,9 +147,7 @@ app.layout = dbc.Container(fluid=True, children=[
             dbc.Col(html.H4("Dilemas, Problemas o Conclictos?"), width={"size":6,"offset":3}),
 
             dbc.Tabs(className="nav nav-pills", children=[
-                dbc.Tab(html.Div(id='descripcion_problema'),
-
-                                label= u"Descripción del problema",
+                dbc.Tab(html.Div(id='descripcion_problema'), label= u"Descripción del problema",
                                 style= {
                                     'display': 'block',
                                     'margin-right': '7px',
@@ -98,7 +155,7 @@ app.layout = dbc.Container(fluid=True, children=[
                                     'font-size': '2rem'
                                 } ),
 
-                dbc.Tab(dcc.Graph(id="plot-active"), label="Proyecto final")
+                dbc.Tab(dcc.Graph(id="proyecto_final"), label="Proyecto final")
             ])
         ])
     ])
@@ -118,9 +175,9 @@ def def_problema_seleccionado(problema_seleccionado):
     Output('problema_especifico', 'value'),
     Input('problema_especifico', 'options'))
 def def_problemas_disponibles(opciones_disponibles):
-    return opciones_disponibles[0]['value'] #selected value in the RadioItems
+    return opciones_disponibles['value'] #selected value in the RadioItems
 
-### OCULTAR/MOSTRAR PREGUNTA
+### OCULTAR/MOSTRAR PREGUNTA SOBRE PROBLEMA ESPECIFICO
 @app.callback(
     Output('problema_especifico', 'labelStyle'),
     Output('titulo_problema_especifico', 'style'),
@@ -131,15 +188,53 @@ def def_mostrar_prob_especifico(mostrar_opciones):
     if mostrar_opciones == '':
         return [{'display': 'none'}, {'display': 'none'}]
 
+### OCULTAR/MOSTRAR PREGUNTA SOBRE DECISION EXCLUYENTE
+@app.callback(
+    Output('decision_excluyente', 'labelStyle'),
+    Output('titulo_decision_excluyente', 'style'),
+    Input('tipo_problema', 'value'),
+    Input('problema_especifico', 'value')
+    )
+def def_mostrar_decision_excluyente(tp, de): #tp: tipo de problema; de : decision excluyente
+    if tp != '' and de != '':
+        return [{'display': 'block'}, {'display': 'block'}]
+    if tp == '' or de != '' :
+        return [{'display': 'none'}, {'display': 'none'}]
+
+
+### DECIDIR QUE PREGUNTA VALORES U OBJETIVO DEPENDIENDO DE EXCLUYENTE
+@app.callback(
+    Output('titulo_decision_afecta_valores', 'style'),
+    Output('decision_afecta_valores', 'labelStyle'),
+    Output('titulo_objetivo_dificil', 'style'),
+    Output('objetivo_dificil', 'labelStyle'),
+    Input('tipo_problema', 'value'),
+    Input('problema_especifico', 'value'),
+    Input('decision_excluyente', 'value')
+    )
+def def_mostrar_valores_objetivo(tp, pe, de):
+    if tp == '' or pe == '' or de == '':
+        return {'display': 'none'}, {'display': 'none'}, {'display': 'none'}, {'display': 'none'}
+    if de == 'si':
+        return {'display': 'block'}, {'display': 'block'}, {'display': 'none'}, {'display': 'none'}
+    if de == 'no':
+        return {'display': 'none'}, {'display': 'none'}, {'display': 'block'}, {'display': 'block'}
+
+
+
 ### DESCRIPCION DEL PROBLEMA
 @app.callback(
     Output('descripcion_problema', 'children'),
     Input('tipo_problema', 'value'),
-    Input('problema_especifico', 'value'))
-def def_descripcion_problema(ps, pe):
-    return u'Usted ha señalado que tiene un problema {} relacionado con  {}'.format(
-        ps.lower(), pe.lower(),
+    Input('problema_especifico', 'value'),
+    Input('decision_excluyente', 'value')
+    #Input('decision_afecta_valores', 'value'),
     )
+def def_descripcion_problema(tp, pe, de):
+    if tp != '' and pe != '' and de != '':
+        return u'Usted ha señalado que tiene un problema {} relacionado con  {}. El problema  {} lo(a) obliga a tomar decisiones excluyentes'.format(
+            tp.lower(), pe.lower(), de.lower()
+        )
 
 
 if __name__ == '__main__':
