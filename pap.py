@@ -139,6 +139,7 @@ app.layout = dbc.Container(fluid=True, children=[
                 dbc.Tab(
                     html.Div
                         (id='descripcion_problema'),
+
                         label= u"Descripción del problema",
                                 style= {
                                     'display': 'block',
@@ -146,13 +147,12 @@ app.layout = dbc.Container(fluid=True, children=[
                                     'margin-top': '40px',
                                     'font-size': '2rem'
                                     }
-                                ) ,
-                                dcc.Textarea(
-                                            id='diagnostico',
-                                            value='',
-                                            style={'display':'none'},
+                                ),
+                                    dcc.Textarea(
+                                          id='diagnostico',
+                                          value='',
+                                          style={'display':'none'},
                                         ),
-                                        html.Div(id='textarea-example-output', style={'whiteSpace': 'pre-line'}),
 
                     dbc.Tab(dcc.Graph(id="proyecto_final"), label="Proyecto final")
             ])
@@ -221,11 +221,14 @@ def def_mostrar_valores_objetivo(tp, pe, de):
 @app.callback(
     Output('emociones_desbordadas', 'labelStyle'),
     Output('titulo_emociones_desbordadas', 'style'),
+    Input('decision_excluyente', 'value'),
     Input('decision_afecta_valores', 'value'),
     Input('objetivo_dificil', 'value')
     )
-def def_emociones_desbordadas(av, od):
+def def_emociones_desbordadas(de, av, od):
     if od != '' :
+        return [{'display': 'block'}, {'display': 'block'}]
+    elif de == 'si' and av =='no':
         return [{'display': 'block'}, {'display': 'block'}]
     elif od == '' or av =='':
         return [{'display': 'none'}, {'display': 'none'}]
@@ -238,14 +241,19 @@ def def_emociones_desbordadas(av, od):
     Input('tipo_problema', 'value'),
     Input('problema_especifico', 'value'),
     Input('decision_excluyente', 'value'),
-    Input('decision_afecta_valores', 'value')
+    Input('decision_afecta_valores', 'value'),
+    Input('emociones_desbordadas', 'value')
     )
-def def_diagnostico(tp, pe, de, av):
+def def_diagnostico(tp, pe, de, av, ed):
     print (tp, pe, de, av)
     if tp != '' and pe != ''and de == 'si' and av== 'si':
-        return {'display': 'block','width': '100%', 'height': 100, 'font-size': '2rem' }, u'Usted está enfrentando un Dilema'
+        return {'display': 'block','width': '100%', 'height': 100, 'font-size': '2rem', 'margin-top': '40px' }, u'Usted está enfrentando un Dilema'
+    if tp != '' and pe != '' and ed== 'si':
+        return {'display': 'block','width': '100%', 'height': 100, 'font-size': '2rem' , 'margin-top': '40px'}, u'Usted está enfrentando un Conflicto'
+    if tp != '' and pe != '' and ed== 'no':
+        return {'display': 'block','width': '100%', 'height': 100, 'font-size': '2rem' , 'margin-top': '40px'}, u'Usted está enfrentando un Problema'
     elif tp != '' and pe != ''or de == 'no' or av== 'no':
-        return {'display': 'none','width': '100%', 'height': 100, 'font-size': '2rem' }, u''
+        return {'display': 'none','width': '100%', 'height': 100, 'font-size': '2rem' , 'margin-top': '40px'}, u''
 
 ### DESCRIPCION DEL PROBLEMA
 @app.callback(
