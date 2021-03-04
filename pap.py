@@ -16,6 +16,7 @@ from settings import config, about
 external_stylesheets = [dbc.themes.CERULEAN]
 
 app = dash.Dash(external_stylesheets=[dbc.themes.CERULEAN])
+server=app.server
 
 problemas = {
     'Personal': [u'Una relación amorosa', 'Depresión', 'Desempleo'],

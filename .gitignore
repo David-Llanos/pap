@@ -1,1 +1,5 @@
 __pycache__
+pap_env
+*.pyc
+.env
+.DS_Store
