@@ -61,12 +61,12 @@ inputs = dbc.FormGroup([
                    ),
 
     html.Br(),
-    html.H5("1. Seleccione tipo de problema", id= 'titulo_tipo_problema', style={'display':'block'}),
+    html.H5("1. Seleccione tipo de situación", id= 'titulo_tipo_problema', style={'display':'block'}),
     dcc.RadioItems(id="tipo_problema", options=[{"label":x,"value":x} for x in problemas], value="",
                    labelStyle={'display': 'block'}),
 
     html.Br(),
-    html.H5(u"2. Problema específico", id= 'titulo_problema_especifico', style={'display':'none'}),
+    html.H5(u"2. Situación específica", id= 'titulo_problema_especifico', style={'display':'none'}),
     dcc.RadioItems(id='problema_especifico', value="",
                    labelStyle={'display': 'none'}
                    ),
@@ -248,9 +248,9 @@ def def_diagnostico(tp, pe, de, av, ed):
     print (tp, pe, de, av)
     if tp != '' and pe != ''and de == 'si' and av== 'si':
         return {'display': 'block','width': '100%', 'height': 100, 'font-size': '2rem', 'margin-top': '40px' }, u'Usted está enfrentando un Dilema'
-    if tp != '' and pe != '' and ed== 'si':
+    elif tp != '' and pe != '' and ed== 'si':
         return {'display': 'block','width': '100%', 'height': 100, 'font-size': '2rem' , 'margin-top': '40px'}, u'Usted está enfrentando un Conflicto'
-    if tp != '' and pe != '' and ed== 'no':
+    elif tp != '' and pe != '' and ed== 'no':
         return {'display': 'block','width': '100%', 'height': 100, 'font-size': '2rem' , 'margin-top': '40px'}, u'Usted está enfrentando un Problema'
     elif tp != '' and pe != ''or de == 'no' or av== 'no':
         return {'display': 'none','width': '100%', 'height': 100, 'font-size': '2rem' , 'margin-top': '40px'}, u''
@@ -260,15 +260,18 @@ def def_diagnostico(tp, pe, de, av, ed):
     Output('descripcion_problema', 'children'),
     Input('tipo_problema', 'value'),
     Input('problema_especifico', 'value'),
-    Input('decision_excluyente', 'value')
-    #Input('decision_afecta_valores', 'value'),
+    Input('decision_excluyente', 'value'),
+    Input('decision_afecta_valores', 'value'),
+    Input('emociones_desbordadas', 'value')
     )
-def def_descripcion_problema(tp, pe, de):
-    if tp != '' and pe != '' and de != '':
-        return u'Usted ha señalado que tiene un problema {} relacionado con  {}. El problema  {} lo(a) obliga a tomar decisiones excluyentes'.format(
-            tp.lower(), pe.lower(), de.lower()
-        )
-
+def def_descripcion_problema(tp, pe, de, av, ed):
+    if tp != '' and pe != '' and de == 'si' and av == 'si':
+        return u'Usted ha señalado que tiene una situación {} relacionada con  {}.\
+             Esta situación  {} lo(a) obliga a tomar decisiones excluyentes y {} afecta sus valores.'.format(tp.lower(), pe.lower(), de.lower(), av.lower())
+    elif tp != '' and pe != ''and de == 'no' and av!='' and ed!= '':
+        return u'Usted ha señalado que tiene una situación {} relacionada con  {}.\
+                Esta situación  {} lo(a) obliga a tomar decisiones excluyentes y {} afecta sus valores.\
+                La situación {} ha implicado desbordamiento de emociones'.format(tp.lower(), pe.lower(), de.lower(),ed.lower())
 
 if __name__ == '__main__':
     app.run_server(debug=True)
