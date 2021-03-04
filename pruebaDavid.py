@@ -1,12 +1,9 @@
 import sys
-
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
-
 from dash.dependencies import Input, Output
 import dash_bootstrap_components as dbc
-
 
 ### TABLA GLOBAL
 problemas = {
@@ -49,6 +46,6 @@ def def_mostrar_prob_especifico(mostrar_opciones):
         return [{'display': 'none'}, {'display': 'none'}]
 
 
-
+###FIN
 if __name__ == '__main__':
     app.run_server(debug=True)
