@@ -1,5 +1,12 @@
 __pycache__
 pap_env
 *.pyc
-.env
+pap_env/
 .DS_Store
+settings/
+/sarallanos/
+static/
+assets/
+dist/
+build/
+pruebaDavid.spec
