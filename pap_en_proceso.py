@@ -29,17 +29,11 @@ problemas = {
     'Pareja': [u'Tipo de vínculo', 'Comunicación', 'Relaciones familiares', 'Relaciones amigos', 'Problemas económicos', 'Intimidad']
 }
 
-soluciones = {
-    'Personal': [u'Propósitos de cambio', 'Apoyo de terceros', 'Ninguna'],
-    'Familiar': [u'Dialogar con los involucrados', 'Tratar de construir acuerdos','Confrontar a las personas involucradas' ],
-    'Laboral': [u'Dialogar con los involucrados', 'Tratar de construir acuerdosos', 'Confrontar a las personas involucradas' ],
-    'Social': [u'Dialogar con los involucrados', 'Tratar de construir acuerdos', 'Confrontar a las personas involucradas'],
-    'Pareja': [u'Dialógo' , 'Acuerdos', 'Confrotación', 'Resignación', 'Ruptura']
-}
-
 # App Instance
 app = dash.Dash(name=config.name, assets_folder=config.root+"/application/static", external_stylesheets=[dbc.themes.CERULEAN, config.fontawesome])
 app.title = config.name
+
+
 
 
 # Navbar
@@ -75,29 +69,20 @@ inputs = dbc.FormGroup([
                    ),
 
     html.Br(),
-    html.H5(u"3.1. Qué soluciones ha intentado?", id= 'titulo_soluciones_intentadas1', style={'display':'none'}),
-    dcc.RadioItems(id='soluciones_intentadas1', value="",
+    html.H5(u"3. ¿Qué soluciones ha intentado?", id= 'titulo_soluciones_intentadas', style={'display':'none'}),
+    dcc.RadioItems(id='soluciones_intentadas', value="",
                     options=[
-                                {'label': 'Dialogar con los involucrados-1', 'value': 'dialogar'},
-                                {'label': 'Tratar de construir acuerdos-1', 'value': 'acordar'},
-                                {'label': 'Confrontar a las personas involucradas-1', 'value': 'confrontar'}
+                                {'label': 'Dialogar con los involucrados', 'value': 'dialogar'},
+                                {'label': 'Tratar de construir acuerdos', 'value': 'acordar'},
+                                {'label': 'Confrontar a las personas involucradas', 'value': 'confrontar'}
                             ] ,
                    labelStyle={'display': 'block'}
+
                    ),
 
+                   
     html.Br(),
-    html.H5(u"3.2. Qué soluciones ha intentado?", id= 'titulo_soluciones_intentadas2', style={'display':'none'}),
-    dcc.RadioItems(id='soluciones_intentadas2', value="",
-                    options=[
-                                {'label': 'Dialogar con los involucrados-2', 'value': 'dialogar'},
-                                {'label': 'Tratar de construir acuerdos-2', 'value': 'acordar'},
-                                {'label': 'Confrontar a las personas involucradas-2', 'value': 'confrontar'}
-                            ] ,
-                   labelStyle={'display': 'block'}
-                    ),
-                            
-    html.Br(),
-    html.H5(u"4. Se encuentra usted en la difícil situación en la que debe escoger una sola opción?", id= 'titulo_decision_excluyente', style={'display':'none'}),
+    html.H5(u"4. ¿En esta situación debe tener tomar una decisión entre opciones mutuamente excluyentes?", id= 'titulo_decision_excluyente', style={'display':'none'}),
     dcc.RadioItems(id='decision_excluyente', value="",
                     options=[
                                 {'label': u'Sí', 'value': 'si'},
@@ -108,7 +93,7 @@ inputs = dbc.FormGroup([
                    ),
 
     html.Br(),
-    html.H5(u"5. Es esta una decisión que afecta sus principios y valores?", id= 'titulo_decision_afecta_valores', style={'display':'none'}),
+    html.H5(u"5. ¿Es esta una decisión que afecta sus principios y valores?", id= 'titulo_decision_afecta_valores', style={'display':'none'}),
     dcc.RadioItems(id='decision_afecta_valores', value="",
                     options=[
                                 {'label': u'Sí', 'value': 'si'},
@@ -173,18 +158,13 @@ inputs = dbc.FormGroup([
 ])
 
 ### CONTENIDOS TAB
-   
+
 # App Layout
 app.layout = dbc.Container(fluid=True, children=[
     ## Top
     html.H1(config.name, id="nav-pills"),
     navbar,
-    html.H6("A continuación encontrará usted una forma ágil y breve que le permitirá identificar si esa situación difícil que está atravesando, es un dilema, un problema o un conflicto. "),
-    html.H6("Conocer la diferencia, es el primer paso para empezar a resolverlo, lo invitamos a probarlo."),
-    html.Br(),
-    ## html.Br(),html.Br(),html.Br(),
-
-    
+    html.Br(),html.Br(),html.Br(),
     ## Body
     dbc.Row([
         ### input + panel
@@ -194,9 +174,8 @@ app.layout = dbc.Container(fluid=True, children=[
             html.Div(id="output-panel")
         ]),
         ### plots
-        
-        dbc.Col(md=7, children=[            
-            dbc.Col(html.H4("Dilemas, Problemas o Conflictos?"), width={"size":6,"offset":3}),
+        dbc.Col(md=7, children=[
+            dbc.Col(html.H4("Dilemas, Problemas o Conflictos"), width={"size":6,"offset":3}),
 
             dbc.Tabs(className="nav nav-pills", children=[
                 dbc.Tab(
@@ -249,35 +228,9 @@ def def_opciones_prob_especifico(tp):
 
 ### OCULTAR/MOSTRAR PREGUNTA SOBRE SOLUCIONES INTENTADAS
 @app.callback(
-    Output('soluciones_intentadas1', 'value'),
-    Output('soluciones_intentadas1', 'labelStyle'),
-    #Output('titulo_soluciones_intentadas1', 'style'),
-    Input('tipo_problema', 'value'),
-    Input('problema_especifico', 'value')
-    )
-def def_mostrar_decision_excluyente1(tp, pe): #tp: tipo de problema; de : decision excluyente
-    if tp != '' and pe != '' and pe=='Personal':
-        return [{'display': 'block'}, {'display': 'block'}]
-    else:
-        return [{'display': 'none'}, {'display': 'none'}]
-    
-@app.callback(
-    Output('soluciones_intentadas2', 'value'),
-    Output('soluciones_intentadas2', 'labelStyle'),
-    Output('titulo_soluciones_intentadas2', 'style'),
-    Input('tipo_problema', 'value'),
-    Input('problema_especifico', 'value')
-    )
-def def_mostrar_decision_excluyente2(tp, pe): #tp: tipo de problema; de : decision excluyente
-    if tp != '' and pe != '' and pe=='Familiar':
-        return ['',{'display': 'block'}, {'display': 'block'}]
-    else:
-        return ['',{'display': 'none'}, {'display': 'none'}]
-"""  
-@app.callback(
-    Output('soluciones_intentadas3', 'value'),
-    Output('soluciones_intentadas3', 'labelStyle'),
-    Output('titulo_soluciones_intentadas3', 'style'),
+    Output('soluciones_intentadas', 'value'),
+    Output('soluciones_intentadas', 'labelStyle'),
+    Output('titulo_soluciones_intentadas', 'style'),
     Input('tipo_problema', 'value'),
     Input('problema_especifico', 'value')
     )
@@ -286,34 +239,6 @@ def def_mostrar_decision_excluyente(tp, pe): #tp: tipo de problema; de : decisio
         return ['',{'display': 'block'}, {'display': 'block'}]
     else:
         return ['',{'display': 'none'}, {'display': 'none'}]
-    
-@app.callback(
-    Output('soluciones_intentadas4', 'value'),
-    Output('soluciones_intentadas4', 'labelStyle'),
-    Output('titulo_soluciones_intentadas4', 'style'),
-    Input('tipo_problema', 'value'),
-    Input('problema_especifico', 'value')
-    )
-def def_mostrar_decision_excluyente(tp, pe): #tp: tipo de problema; de : decision excluyente
-    if tp != '' and pe != '':
-        return ['',{'display': 'block'}, {'display': 'block'}]
-    else:
-        return ['',{'display': 'none'}, {'display': 'none'}]
-    
-@app.callback(
-    Output('soluciones_intentadas5', 'value'),
-    Output('soluciones_intentadas5', 'labelStyle'),
-    Output('titulo_soluciones_intentadas5', 'style'),
-    Input('tipo_problema', 'value'),
-    Input('problema_especifico', 'value')
-    )
-def def_mostrar_decision_excluyente(tp, pe): #tp: tipo de problema; de : decision excluyente
-    if tp != '' and pe != '':
-        return ['',{'display': 'block'}, {'display': 'block'}]
-    else:
-        return ['',{'display': 'none'}, {'display': 'none'}]
-    
-"""
 
 
 
@@ -324,77 +249,13 @@ def def_mostrar_decision_excluyente(tp, pe): #tp: tipo de problema; de : decisio
     Output('titulo_decision_excluyente', 'style'),
     Input('tipo_problema', 'value'),
     Input('problema_especifico', 'value'),
-    Input('soluciones_intentadas1', 'value')
+    Input('soluciones_intentadas', 'value')
     )
 def def_mostrar_decision_excluyente(tp, pe, si): #tp: tipo de problema; de : decision excluyente
     if tp != '' and pe != '' and si != '':
         return ['',{'display': 'block'}, {'display': 'block'}]
     else:
         return ['',{'display': 'none'}, {'display': 'none'}]
-    
-@app.callback(
-    Output('decision_excluyente', 'value'),
-    Output('decision_excluyente', 'labelStyle'),
-    Output('titulo_decision_excluyente', 'style'),
-    Input('tipo_problema', 'value'),
-    Input('problema_especifico', 'value'),
-    Input('soluciones_intentadas2', 'value')
-    )
-def def_mostrar_decision_excluyente(tp, pe, si): #tp: tipo de problema; de : decision excluyente
-    if tp != '' and pe != '' and si != '':
-        return ['',{'display': 'block'}, {'display': 'block'}]
-    else:
-        return ['',{'display': 'none'}, {'display': 'none'}]
-    
-@app.callback(
-    Output('decision_excluyente', 'value'),
-    Output('decision_excluyente', 'labelStyle'),
-    Output('titulo_decision_excluyente', 'style'),
-    Input('tipo_problema', 'value'),
-    Input('problema_especifico', 'value')
-    #Input('soluciones_intentadas3', 'value')
-    )
-def def_mostrar_decision_excluyente(tp, pe): #tp: tipo de problema; de : decision excluyente
-    if tp != '' and pe != '' :
-        return ['',{'display': 'block'}, {'display': 'block'}]
-    else:
-        return ['',{'display': 'none'}, {'display': 'none'}]
-    
-@app.callback(
-    Output('decision_excluyente', 'value'),
-    Output('decision_excluyente', 'labelStyle'),
-    Output('titulo_decision_excluyente', 'style'),
-    Input('tipo_problema', 'value'),
-    Input('problema_especifico', 'value')
-    #nput('soluciones_intentadas4', 'value')
-    )
-def def_mostrar_decision_excluyente(tp, pe): #tp: tipo de problema; de : decision excluyente
-    if tp != '' and pe != '' :
-        return ['',{'display': 'block'}, {'display': 'block'}]
-    else:
-        return ['',{'display': 'none'}, {'display': 'none'}]
-    
-@app.callback(
-    Output('decision_excluyente', 'value'),
-    Output('decision_excluyente', 'labelStyle'),
-    Output('titulo_decision_excluyente', 'style'),
-    Input('tipo_problema', 'value'),
-    Input('problema_especifico', 'value')
-    #Input('soluciones_intentadas5', 'value')
-    )
-def def_mostrar_decision_excluyente(tp, pe): #tp: tipo de problema; de : decision excluyente
-    if tp != '' and pe != '':
-        return ['',{'display': 'block'}, {'display': 'block'}]
-    else:
-        return ['',{'display': 'none'}, {'display': 'none'}]
-
-
-
-
-    
-    
-    
-    
 
 ### OCULTAR/MOSTRAR PREGUNTA SOBRE DECISION AFECTA VALORES
 @app.callback(
@@ -403,7 +264,7 @@ def def_mostrar_decision_excluyente(tp, pe): #tp: tipo de problema; de : decisio
     Output('titulo_decision_afecta_valores', 'style'),
     Input('tipo_problema', 'value'),
     Input('problema_especifico', 'value'),
-    Input('soluciones_intentadas1', 'value'),
+    Input('soluciones_intentadas', 'value'),
     Input('decision_excluyente', 'value')
     )
 def def_mostrar_decision_excluyente(tp, pe, si, de): #tp: tipo de problema; de : decision excluyente
@@ -411,66 +272,6 @@ def def_mostrar_decision_excluyente(tp, pe, si, de): #tp: tipo de problema; de :
         return ['',{'display': 'block'}, {'display': 'block'}]
     else:
         return ['',{'display': 'none'}, {'display': 'none'}]
-    
-@app.callback(
-    Output('decision_afecta_valores', 'value'),
-    Output('decision_afecta_valores', 'labelStyle'),
-    Output('titulo_decision_afecta_valores', 'style'),
-    Input('tipo_problema', 'value'),
-    Input('problema_especifico', 'value'),
-    Input('soluciones_intentadas2', 'value'),
-    Input('decision_excluyente', 'value')
-    )
-def def_mostrar_decision_excluyente(tp, pe, si, de): #tp: tipo de problema; de : decision excluyente
-    if tp != '' and pe != '' and si != '' and de != '':
-        return ['',{'display': 'block'}, {'display': 'block'}]
-    else:
-        return ['',{'display': 'none'}, {'display': 'none'}]  
-    
-@app.callback(
-    Output('decision_afecta_valores', 'value'),
-    Output('decision_afecta_valores', 'labelStyle'),
-    Output('titulo_decision_afecta_valores', 'style'),
-    Input('tipo_problema', 'value'),
-    Input('problema_especifico', 'value'),
-    Input('soluciones_intentadas3', 'value'),
-    Input('decision_excluyente', 'value')
-    )
-def def_mostrar_decision_excluyente(tp, pe, si, de): #tp: tipo de problema; de : decision excluyente
-    if tp != '' and pe != '' and si != '' and de != '':
-        return ['',{'display': 'block'}, {'display': 'block'}]
-    else:
-        return ['',{'display': 'none'}, {'display': 'none'}] 
-    
-@app.callback(
-    Output('decision_afecta_valores', 'value'),
-    Output('decision_afecta_valores', 'labelStyle'),
-    Output('titulo_decision_afecta_valores', 'style'),
-    Input('tipo_problema', 'value'),
-    Input('problema_especifico', 'value'),
-    Input('soluciones_intentadas4', 'value'),
-    Input('decision_excluyente', 'value')
-    )
-def def_mostrar_decision_excluyente(tp, pe, si, de): #tp: tipo de problema; de : decision excluyente
-    if tp != '' and pe != '' and si != '' and de != '':
-        return ['',{'display': 'block'}, {'display': 'block'}]
-    else:
-        return ['',{'display': 'none'}, {'display': 'none'}]  
-    
-@app.callback(
-    Output('decision_afecta_valores', 'value'),
-    Output('decision_afecta_valores', 'labelStyle'),
-    Output('titulo_decision_afecta_valores', 'style'),
-    Input('tipo_problema', 'value'),
-    Input('problema_especifico', 'value'),
-    Input('soluciones_intentadas5', 'value'),
-    Input('decision_excluyente', 'value')
-    )
-def def_mostrar_decision_excluyente(tp, pe, si, de): #tp: tipo de problema; de : decision excluyente
-    if tp != '' and pe != '' and si != '' and de != '':
-        return ['',{'display': 'block'}, {'display': 'block'}]
-    else:
-        return ['',{'display': 'none'}, {'display': 'none'}]           
 
 ### OCULTAR/MOSTRAR PREGUNTA SOBRE EMOCIONES DESBORDADAS
 @app.callback(
