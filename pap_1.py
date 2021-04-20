@@ -49,7 +49,7 @@ navbar = dbc.Nav(className="nav nav-pills", children=[
     #dbc.NavItem(html.Img(src=app.get_asset_url("logo.PNG"), height="40px")),
     ## about
             dbc.NavItem(html.Div([
-                #dbc.NavLink("About", href="/", id="about-popover", active=False),
+                dbc.NavLink("About", href="/", id="about-popover", active=False),
                 dbc.Popover(id="about", is_open=False, target="about-popover", children=[
                     dbc.PopoverHeader("How it works"), dbc.PopoverBody(about.txt)
                 ])
@@ -77,11 +77,11 @@ inputs = dbc.FormGroup([
 
     html.Br(),
     html.H5(u"3. ¿Qué soluciones ha intentado?", id= 'titulo_soluciones_intentadas', style={'display':'none'}),
-    dcc.RadioItems(id='soluciones_intentadas', value="",                    
+    dcc.RadioItems(id='soluciones_intentadas', value="",
                    labelStyle={'display': 'block'}
                    ),
 
-                   
+
     html.Br(),
     html.H5(u"4. ¿En esta situación debe tener tomar una decisión entre opciones mutuamente excluyentes?", id= 'titulo_decision_excluyente', style={'display':'none'}),
     dcc.RadioItems(id='decision_excluyente', value="",
@@ -218,29 +218,33 @@ def def_problema_seleccionado(problema_seleccionado):
 @app.callback(
     Output('problema_especifico', 'labelStyle'),
     Output('titulo_problema_especifico', 'style'),
+    Output('problema_especifico', 'value'),
     Input('tipo_problema', 'value')
     )
 def def_opciones_prob_especifico(tp):
     if tp != '' :
-        return [{'display': 'block'}, {'display': 'block'}]
+        return [{'display': 'block'}, {'display': 'block'},'']
     elif tp == '':
-        return [{'display': 'none'}, {'display': 'none'}]
+        return [{'display': 'none'}, {'display': 'none'},'']
 
 
 ### OCULTAR/MOSTRAR PREGUNTA SOBRE SOLUCIONES INTENTADAS
 
+
+
 @app.callback(
     Output('soluciones_intentadas', 'options'),
-    Output('soluciones_intentadas', 'labelStyle'),
+    #Output('soluciones_intentadas', 'labelStyle'),
     Output('titulo_soluciones_intentadas', 'style'),
     Input('tipo_problema', 'value'),
     Input('problema_especifico', 'value')
     )
 def def_opciones_solu_intentadas(tp, pe):
-    if tp != '' and pe != '' :
-        return [ [{'label': i, 'value': i} for i in soluciones[tp]] ,{'display': 'block'}, {'display': 'block'}]
+    print(pe)
+    if tp != '' and pe !='' :
+        return [ [{'label': i, 'value': i} for i in soluciones[tp]], {'display': 'block'} ]
     else :
-        return [{'display': 'none'}, {'display': 'none'}]
+        return [[], {'display': 'none'}]
 
 
 ### OCULTAR/MOSTRAR PREGUNTA SOBRE DECISION EXCLUYENTE
@@ -422,4 +426,4 @@ def def_descripcion_problema(tp, pe, de, av, ed ,io, ao):
         return ''
 
 if __name__ == '__main__':
-    app.run_server(debug=True, dev_tools_ui=False)
+    app.run_server(debug=True, dev_tools_ui=True)
