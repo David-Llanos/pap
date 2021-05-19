@@ -218,14 +218,14 @@ def def_problema_seleccionado(problema_seleccionado):
 @app.callback(
     Output('problema_especifico', 'labelStyle'),
     Output('titulo_problema_especifico', 'style'),
-    Output('problema_especifico', 'value'),
+    Output('problema_especifico', 'value'), #Esto arregla pregunta 3 por que reinicia la 2 cuando cambia la 1
     Input('tipo_problema', 'value')
     )
 def def_opciones_prob_especifico(tp):
     if tp != '' :
-        return [{'display': 'block'}, {'display': 'block'},'']
+        return [{'display': 'block'}, {'display': 'block'},''] # al return le agregamos al final value= ''
     elif tp == '':
-        return [{'display': 'none'}, {'display': 'none'},'']
+        return [{'display': 'none'}, {'display': 'none'},''] # al return le agregamos al final value= ''
 
 
 ### OCULTAR/MOSTRAR PREGUNTA SOBRE SOLUCIONES INTENTADAS
@@ -240,7 +240,7 @@ def def_opciones_prob_especifico(tp):
     Input('problema_especifico', 'value')
     )
 def def_opciones_solu_intentadas(tp, pe):
-    print(pe)
+    print('Este es el problema selccionado: ' + pe)
     if tp != '' and pe !='' :
         return [ [{'label': i, 'value': i} for i in soluciones[tp]], {'display': 'block'} ]
     else :
