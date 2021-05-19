@@ -23,18 +23,18 @@ app.logger.setLevel(logging.ERROR)
 
 problemas = {
     'Personal': [u'Cambios', 'Proyecto de vida', 'Percecpión de sí mismo'],
-    'Familiar': [u'Con su posición en la familia', 'En su núcleo familiar : padres e hijos', 'Con la Familia extensa: otros familiares'],
-    'Laboral': [u'Con su jefe(a)', 'Con compañeros de trabajo', 'Con sus Condiciones laborales'],
+    'Familiar': [u'Su posición en la familia', 'Su núcleo familiar : padres e hijos', 'La Familia extensa: otros familiares'],
+    'Laboral': [u'Su jefe(a)', 'Compañeros de trabajo', 'Sus Condiciones laborales'],
     'Social': [u'Amigos', 'Vecinos', 'Relaciones interpersonales en general'],
     'Pareja': [u'Tipo de vínculo', 'Comunicación', 'Relaciones familiares', 'Relaciones amigos', 'Problemas económicos', 'Intimidad']
 }
 
 soluciones = {
-    'Personal': [u'Cambios-solucion', 'Proyecto de vida-solucion', 'Percecpión de sí mismo-solucion'],
-    'Familiar': [u'Con su posición en la familia-solucion', 'En su núcleo familiar-solucion : padres e hijos-solucion', 'Con la Familia extensa: otros familiares-solucion'],
-    'Laboral': [u'Con su jefe(a)-solucion', 'Con compañeros de trabajo-solucion', 'Con sus Condiciones laborales-solucion'],
-    'Social': [u'Amigos-solucion', 'Vecinos-solucion', 'Relaciones interpersonales en general-solucion'],
-    'Pareja': [u'Tipo de vínculo-solucion', 'Comunicación-solucion', 'Relaciones familiares-solucion', 'Relaciones amigos-solucion', 'Problemas económicos-solucion', 'Intimidad-solucion']
+    'Personal': [u'Propósitos de cambio', 'Apoyo de terceros', 'Ninguna'],
+    'Familiar': [u'Dialogar con los involucrados', 'Tratar de construir acuerdos', 'Confrontar a las personas involucradas'],
+    'Laboral': [u'Dialogar con los involucrados', 'Tratar de construir acuerdos', 'Confrontar a las personas involucradas'],
+    'Social': [u'Dialogar con los involucrados', 'Tratar de construir acuerdos', 'Confrontar a las personas involucradas'],
+    'Pareja': [u'Diálogo', 'Acuerdos', 'Confrontación', 'Resignación','Ruptura']
 }
 # App Instance
 app = dash.Dash(name=config.name, assets_folder=config.root+"/application/static", external_stylesheets=[dbc.themes.CERULEAN, config.fontawesome])
@@ -403,13 +403,13 @@ def def_diagnostico(tp, pe, de, av, ed,io, ao):
 def def_descripcion_problema(tp, pe, de, av, ed ,io, ao):
     if tp != '' and pe != ''and de == 'si' and av != '':
             return u'Usted ha señalado que tiene una situación {}\
-                relacionada   {}.\
+                relacionada con  {}.\
                 Esta situación  {} lo(a) obliga a tomar decisiones excluyentes y \
                 {} afecta sus valores.'.format(tp.lower(), pe.lower(), de.lower(), av.lower())
 
     elif tp != '' and pe != '' and de == 'no' and av != '' and ed== 'si'  and io != '':
             return  u'Usted ha señalado que tiene una situación {}\
-                    relacionada   {}.\
+                    relacionada con  {}.\
                     Esta situación  {} lo(a) obliga a tomar decisiones excluyentes y \
                     {} afecta sus valores.\
                     La situación {} ha implicado desbordamiento de emociones y {} hace que sea difícil identificar sus objetivos.'\
@@ -417,7 +417,7 @@ def def_descripcion_problema(tp, pe, de, av, ed ,io, ao):
 
     elif tp != '' and pe != '' and de == 'no' and av != '' and ed== 'no'  and io != '':
             return u'Usted ha señalado que tiene una situación {}\
-                    relacionada   {}.\
+                    relacionada con  {}.\
                     Esta situación  {} lo(a) obliga a tomar decisiones excluyentes y {} ha hecho que sea difícil identificar sus objetivos.\
                     La situación {} ha implicado desbordamiento de emociones'\
                     .format(tp.lower(), pe.lower(), de.lower(), av.lower(), ed.lower(),io.lower())
